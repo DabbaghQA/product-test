@@ -6,10 +6,10 @@ cache:
     - "$HOME/.composer/cache"
     - "$HOME/.npm"
 php:
-  - '5.6'
-  - '7.0'
+  -  5.6
+  -  7.0
   
-  sudo: false
+sudo: false
   
 before_install:
   - composer self-update
