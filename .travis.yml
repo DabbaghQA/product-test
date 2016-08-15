@@ -30,3 +30,6 @@ install:
 
   - composer install
   - bin/behat --init
+
+script:
+  - bin/behat features
