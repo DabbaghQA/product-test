@@ -30,7 +30,7 @@ install:
   - echo 'max_file_uploads = 40' >> test-settings.php.ini;
   - echo 'sendmail_path = /bin/true' >> test-settings.php.ini;
   - phpenv config-add test-settings.php.ini
-  - phpenv rehas
+  - phpenv rehash
 
   - composer install
   - bin/behat --init
