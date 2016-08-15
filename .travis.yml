@@ -14,11 +14,12 @@ php:
 before_install:
   - composer self-update
   - composer --version
+
 install:
   - export PATH="$HOME/.composer/vendor/bin:$TRAVIS_BUILD_DIR/bin:$PATH"
   - export COMPOSER_EXIT_ON_PATCH_FAILURE=1
 
-# PHP Configurations.
+  # PHP Configurations.
   - echo 'max_execution_time = 300' >> test-settings.php.ini;
   - echo 'max_input_time = 180' >> test-settings.php.ini;
   - echo 'max_input_vars = 10000' >> test-settings.php.ini;
