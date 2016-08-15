@@ -33,3 +33,6 @@ install:
 
 script:
   - bin/behat features
+
+matrix:
+  fast_finish: true
