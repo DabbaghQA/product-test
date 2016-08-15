@@ -8,6 +8,9 @@ cache:
 php:
   - '5.6'
   - '7.0'
+  
+  sudo: false
+  
 before_install:
   - composer self-update
   - composer --version
