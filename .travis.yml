@@ -27,3 +27,6 @@ install:
   - echo 'sendmail_path = /bin/true' >> test-settings.php.ini;
   - phpenv config-add test-settings.php.ini
   - phpenv rehas
+
+  - composer install
+  - bin/behat --init
