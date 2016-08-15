@@ -14,3 +14,16 @@ before_install:
 install:
   - export PATH="$HOME/.composer/vendor/bin:$TRAVIS_BUILD_DIR/bin:$PATH"
   - export COMPOSER_EXIT_ON_PATCH_FAILURE=1
+
+# PHP Configurations.
+  - echo 'max_execution_time = 300' >> test-settings.php.ini;
+  - echo 'max_input_time = 180' >> test-settings.php.ini;
+  - echo 'max_input_vars = 10000' >> test-settings.php.ini;
+  - echo 'memory_limit = 512M' >> test-settings.php.ini;
+  - echo 'error_reporting = E_ALL' >> test-settings.php.ini;
+  - echo 'post_max_size = 64M' >> test-settings.php.ini;
+  - echo 'upload_max_filesize = 32M' >> test-settings.php.ini;
+  - echo 'max_file_uploads = 40' >> test-settings.php.ini;
+  - echo 'sendmail_path = /bin/true' >> test-settings.php.ini;
+  - phpenv config-add test-settings.php.ini
+  - phpenv rehas
