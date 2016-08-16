@@ -53,4 +53,4 @@ matrix:
       env: WP_TRAVISCI=travis:phpunit
  allow_failures:
     -php: 5.6
-  fast_finish: true
+ fast_finish: true
