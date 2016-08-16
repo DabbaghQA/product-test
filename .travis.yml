@@ -6,12 +6,10 @@ cache:
     - "$HOME/.composer/cache"
     - "$HOME/.drush/cache"
     - "$HOME/.npm"
-
-# see http://about.travis-ci.org/docs/user/languages/php/ for more hints
-language: php
-
 php:
-  -  5.6
+  - 7.0
+env:
+  - VERSION=8.x-1.x
   
 sudo: false
 
@@ -19,38 +17,45 @@ mysql:
   database: drupal
   username: root
   encoding: utf8
-  
+
 before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer --version
+  - composer remove drupal/core
+  - composer require drupal/drupal 8.1.8
+  
 
 install:
   - export PATH="$HOME/.composer/vendor/bin:$TRAVIS_BUILD_DIR/bin:$PATH"
+
   - export COMPOSER_EXIT_ON_PATCH_FAILURE=1
 
   - mysql -e 'SET GLOBAL wait_timeout = 5400;'
   - mysql -e "SHOW VARIABLES LIKE 'wait_timeout'"
 
-  # PHP Configurations.
-  - echo 'max_execution_time = 300' >> test-settings.php.ini;
-  - echo 'max_input_time = 180' >> test-settings.php.ini;
-  - echo 'max_input_vars = 10000' >> test-settings.php.ini;
-  - echo 'memory_limit = 512M' >> test-settings.php.ini;
-  - echo 'error_reporting = E_ALL' >> test-settings.php.ini;
-  - echo 'post_max_size = 64M' >> test-settings.php.ini;
-  - echo 'upload_max_filesize = 32M' >> test-settings.php.ini;
-  - echo 'max_file_uploads = 40' >> test-settings.php.ini;
-  - echo 'sendmail_path = /bin/true' >> test-settings.php.ini;
-  - phpenv config-add test-settings.php.ini
+  - echo 'max_execution_time = 120' >> drupal.php.ini;
+  - echo 'sendmail_path = /bin/true' >> drupal.php.ini;
+  - phpenv config-add drupal.php.ini
   - phpenv rehash
 
-  - composer install
-  - bin/behat --init
+  - composer global require phing/phing
+  - phing build -Dversion=$VERSION -Dbranch=$TRAVIS_COMMIT
+
+  - phing install -Ddb.database=drupal
+  - if [ $VERSION != "HEAD" ]; then phing update; fi
+
+before_script:
+  - cd docroot
+  - drush runserver --default-server=builtin 8080 &>/dev/null &
+  - phantomjs --webdriver=4444 > /dev/null &
+  - sleep 5
+  
+  - php profiles/drupaltest/modules/contrib/composer_manager/scripts/init.php
 
 script:
-  - bin/behat feature
-# Build matrix options
+  - cd ./profiles/drupaltest
+  - behat --strict
 
 matrix:
- fast_finish: true
+  fast_finish: true
