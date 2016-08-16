@@ -25,6 +25,9 @@ install:
   - export PATH="$HOME/.composer/vendor/bin:$TRAVIS_BUILD_DIR/bin:$PATH"
   - export COMPOSER_EXIT_ON_PATCH_FAILURE=1
 
+  - mysql -e 'SET GLOBAL wait_timeout = 5400;'
+  - mysql -e "SHOW VARIABLES LIKE 'wait_timeout'"
+
   # PHP Configurations.
   - echo 'max_execution_time = 300' >> test-settings.php.ini;
   - echo 'max_input_time = 180' >> test-settings.php.ini;
