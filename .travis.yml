@@ -45,9 +45,8 @@ install:
   - composer install
   - bin/behat --init
   
-
-
-
+script:
+  - bin/behat --strict
 
 matrix:
   fast_finish: true
