@@ -46,7 +46,7 @@ install:
 
 script:
   - bin/behat feature
-
+# Build matrix options
 matrix:
   include:
     - php: 5.6
