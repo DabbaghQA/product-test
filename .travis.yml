@@ -7,9 +7,7 @@ cache:
     - "$HOME/.drush/cache"
     - "$HOME/.npm"
 php:
-  - 7.0
-env:
-  - VERSION=8.x-1.x
+  - 5.5
   
 sudo: false
 
@@ -22,9 +20,6 @@ before_install:
   - phpenv config-rm xdebug.ini
   - composer self-update
   - composer --version
-  - composer remove drupal/core
-  - composer require drupal/drupal 8.1.8
-  
 
 install:
   - export PATH="$HOME/.composer/vendor/bin:$TRAVIS_BUILD_DIR/bin:$PATH"
@@ -34,28 +29,26 @@ install:
   - mysql -e 'SET GLOBAL wait_timeout = 5400;'
   - mysql -e "SHOW VARIABLES LIKE 'wait_timeout'"
 
-  - echo 'max_execution_time = 120' >> drupal.php.ini;
+  # PHP Configurations.
+  - echo 'max_execution_time = 300' >> drupal.php.ini;
+  - echo 'max_input_time = 180' >> drupal.php.ini;
+  - echo 'max_input_vars = 10000' >> drupal.php.ini;
+  - echo 'memory_limit = 512M' >> drupal.php.ini;
+  - echo 'error_reporting = E_ALL' >> drupal.php.ini;
+  - echo 'post_max_size = 64M' >> drupal.php.ini;
+  - echo 'upload_max_filesize = 32M' >> drupal.php.ini;
+  - echo 'max_file_uploads = 40' >> drupal.php.ini;
   - echo 'sendmail_path = /bin/true' >> drupal.php.ini;
   - phpenv config-add drupal.php.ini
   - phpenv rehash
-
-  - composer global require phing/phing
-  - phing build -Dversion=$VERSION -Dbranch=$TRAVIS_COMMIT
-
-  - phing install -Ddb.database=drupal
-  - if [ $VERSION != "HEAD" ]; then phing update; fi
-
-before_script:
-  - cd docroot
-  - drush runserver --default-server=builtin 8080 &>/dev/null &
-  - phantomjs --webdriver=4444 > /dev/null &
-  - sleep 5
   
-  - php profiles/drupaltest/modules/contrib/composer_manager/scripts/init.php
+  - composer install
+  - bin/behat --init
+  
+
 
 script:
-  - cd ./profiles/drupaltest
-  - behat --strict
+  - bin/behat features
 
 matrix:
   fast_finish: true
