@@ -37,7 +37,7 @@ install:
   - bin/behat --init
   
 script:
-  - bin/behat --features
+  - bin/behat 
 
 matrix:
   fast_finish: true
