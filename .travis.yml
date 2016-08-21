@@ -18,7 +18,8 @@ before_install:
   - composer --version
 
 install:
-  
+  - phpenv config-add drupal.php.ini
+  - phpenv rehash
   - composer install
   - bin/behat --init
   
