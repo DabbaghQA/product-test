@@ -18,8 +18,20 @@ before_install:
   - composer --version
 
 install:
+  
+  # PHP Configurations.
+  - echo 'max_execution_time = 300' >> drupal.php.ini;
+  - echo 'max_input_time = 180' >> drupal.php.ini;
+  - echo 'max_input_vars = 10000' >> drupal.php.ini;
+  - echo 'memory_limit = 512M' >> drupal.php.ini;
+  - echo 'error_reporting = E_ALL' >> drupal.php.ini;
+  - echo 'post_max_size = 64M' >> drupal.php.ini;
+  - echo 'upload_max_filesize = 32M' >> drupal.php.ini;
+  - echo 'max_file_uploads = 40' >> drupal.php.ini;
+  - echo 'sendmail_path = /bin/true' >> drupal.php.ini;
   - phpenv config-add drupal.php.ini
   - phpenv rehash
+  
   - composer install
   - bin/behat --init
   
